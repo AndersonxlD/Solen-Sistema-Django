@@ -1,0 +1,39 @@
+.red-background {
+    background-color: red;
+    color: rgb(255, 255, 255); /* Isso torna o texto branco para uma melhor legibilidade */
+    padding: 5px 10px; /* Adicione preenchimento para espaçamento interno */
+    border-radius: 5px; /* Adicione bordas arredondadas para um visual mais agradável */
+    text-decoration: none; /* Remova a sublinhado padrão de links */
+  }
+
+  /* Add this to your base.css or a custom CSS file */
+.background-image {
+  background-image: url("{% static 'images/backgroud.png' %}"); /* Replace with your image URL */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.text-square {
+  background-color: rgba(255, 255, 255, 0.8); /* Adjust background color and opacity */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.navbar-nav .nav-link {
+  margin-right: 5px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.card {
+  margin: 20px;
+  display: inline-block;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+  margin-right: 20px;
+}

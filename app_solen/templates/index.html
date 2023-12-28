@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+<title>{% block title %}Home{% endblock %}</title>
+<link href="{% static 'css/base.css' %}" rel="stylesheet">
+
+
+{% block nav %}
+<div class="background-image">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Solen - Agendamentos</h1>
+                <p>Tudo para um processo perfeito.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="text-square">
+                    <h2>Bem-vindo</h2>
+                    <i>{{ MY_CONSTANT }}</i>
+                    <br><br>
+                    <p>Somos um sistema para execução e acompanhamento de agendamentos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

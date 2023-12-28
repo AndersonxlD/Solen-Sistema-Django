@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <title>{% block title %}Meus Envios{% endblock %}</title>
+    {% bootstrap_css %}
+</head>
+<body>
+    {% block nav %}
+    <div class="container">
+        {% bootstrap_messages %}
+        <h1 class="display-4 text-primary mb-4">Todos Envios</h1>
+        <a href="{% url 'exportar_csv' %}" class="btn btn-primary mb-3">Exportar para CSV</a>
+        <input type="text" id="filtro" class="form-control mb-3"  placeholder="Pesquisar...">
+        <table class="table">
+            <thead class="bg-primary text-light">
+                <tr>
+                    <th>Pedido de Compras</th>
+                    <th>Nota Fiscal</th>
+                    <th>Anexo</th>
+                    <th>Destino</th>
+                    <th>Solicitante</th>
+                    <th>Fornecedor</th>
+                    <th>Data de Envio</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for envio in todos_envios %}
+                <tr>
+                    <td>{{ envio.pedido_compras }}</td>
+                    <td>{{ envio.nota_num }}</td>
+                    <td>{% if envio.pdf_nota %}
+                        <a href="{{ envio.pdf_nota.url }}" target="_blank">Ver PDF</a>
+                        {% else %}
+                        Nenhum anexo disponível
+                        {% endif %}
+                    </td>
+                    <td>{{ envio.empresa_destinataria }}</td>
+                    <td>{{ envio.solicitante }}</td>
+                    <td>{{ envio.usuario.nome_fornecedor }}</td>
+                    <td>{{ envio.get_data_criacao }}</td>
+                    <td>{{ envio.status_envio }}</td>
+                </tr>
+                <div class="modal fade" id="myModal{{ envio.id }}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Alterar envio</h5>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="{% url 'editar_envios' envio.id %}" class="post-form"
+                                    enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id" value="{{ envio.id }}">
+                                    <div class="form-group">
+                                        <label for="novo_pedido_compras">Pedido de Compras</label>
+                                        <input type="text" class="form-control" name="pedido_compras"
+                                            value="{{ envio.pedido_compras }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="novo_nota_num">Nota Fiscal:</label>
+                                        <input type="text" class="form-control" name="nota_num"
+                                            value="{{ envio.nota_num }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for "novo_pdf_nota">PDF Nota Fiscal</label>
+                                        {% if envio.pdf_nota %}
+                                        <a href="{{ envio.pdf_nota.url }}" target="_blank">PDF Atual</a>
+                                        {% else %}
+                                        <p>Nenhum PDF disponível.</p>
+                                        {% endif %}
+                                        <input type="file" class="form-control" name="pdf_nota">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="novo_solicitante">Solicitante</label>
+                                        <input type="text" class="form-control" name="solicitante"
+                                            value="{{ envio.solicitante }}">
+                                    </div>
+                                    <div class="modal-footer"></div>
+                                    <button type="submit" class="btn btn-primary">Salvar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Código JavaScript para o filtro global -->
+    <script>
+        $(document).ready(function () {
+            $("#filtro").on("keyup", function () {
+                var valor = $(this).val().toLowerCase();
+                $("table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(valor) > -1);
+                });
+            });
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>
