@@ -219,7 +219,6 @@ def fiscal_envios(request):
 @login_required(login_url='login')
 def envio_com_divergencia(request, id):
     envios_div = EnviosNFs.objects.get(id=id)
-
     envios_div.status_envio = 'Ag Compras'
     
     envios_div.save()

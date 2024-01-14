@@ -4,6 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,71 +14,66 @@
     <title>{% block title %}Ag Compras{% endblock %}</title>
     {% bootstrap_css %}
 </head>
+
 <body>
     {% block nav %}
     <div class="container">
         {% bootstrap_messages %}
         <h1 class="display-4 text-primary mb-4">Ag Validação - Compras</h1>
-        <input type="text" id="filtro" class="form-control mb-3"  placeholder="Pesquisar...">
-        <table class="table">
-            <thead class="bg-primary text-light">
-                <tr>
-                    <th>Pedido de Compras</th>
-                    <th>Nota Fiscal</th>
-                    <th>Anexo</th>
-                    <th>Fornecedor</th>
-                    <th>Destino</th>
-                    <th>Data de Envio</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for envio in envios %}
-                <tr>
-                    <td>{{ envio.pedido_compras }}</td>
-                    <td>{{ envio.nota_num }}</td>
-                    <td>{% if envio.pdf_nota %}
+        <input type="text" id="filtro" class="form-control mb-3" placeholder="Pesquisar...">
+        <div class="card-deck">
+            {% for envio in envios %}
+            <div class="card mb-3" style="max-width: 18rem; margin: 0 0px;">
+                <div class="card-header bg-primary text-light">
+                    <strong>Pedido de Compras: {{ envio.pedido_compras }}</strong>
+                </div>
+                <div class="card-body">
+                    <div class="card-text"><strong>Nota Fiscal:</strong> {{ envio.nota_num }}</div>
+                    <div class="card-text">
+                        {% if envio.pdf_nota %}
                         <a href="{{ envio.pdf_nota.url }}" target="_blank">Ver PDF</a>
                         {% else %}
                         Nenhum anexo disponível
                         {% endif %}
-                    </td>
-                    <td>{{ envio.usuario.nome_fornecedor }}</td>
-                    <td>{{ envio.empresa_destinataria }}</td>
-                    <td>{{ envio.get_data_criacao }}</td>
-                    <td>{{ envio.status_envio }}</td>
-                    <td>
-                        <button type="button" class="btn btn-success" data-toggle="modal"
-                            data-target="#myModal{{ envio.id }}">Ajustado</button>
-                    </td>
-                </tr>
-                <div class="modal fade" id="myModal{{ envio.id }}">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Deseja realmente alterar o Status?    </h5>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <form method="post" action="{% url 'editar_envios' envio.id %}" class="post-form"
-                                    enctype="multipart/form-data">
-                                    {% csrf_token %}      
-                                    <div>Nota: {{ envio.nota_num }}</div>
-                                    <div>Pedido: {{ envio.pedido_compras }}</div>
-                                    <div>Fornecedor: {{ envio.usuario.nome_fornecedor }}</div>                  
-                                    <div class="modal-footer"></div>
-                                    
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                    <a href="{% url 'envio_ajustado_compras' envio.id %}" id="confirmacaoLink" class="btn btn-primary">Sim</a>
-                                </form>
-                            </div>
+                    </div>
+                    <div class="card-text"><strong>Fornecedor:</strong> {{ envio.usuario.nome_fornecedor }}</div>
+                    <div class="card-text"><strong>Destino:</strong> {{ envio.empresa_destinataria }}</div>
+                    <div class="card-text"><strong>Data de Envio:</strong> {{ envio.get_data_criacao }}</div>
+                    <div class="card-text"><strong>Status:</strong> {{ envio.status_envio }}</div>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-success" data-toggle="modal"
+                        data-target="#myModal{{ envio.id }}">Ajustado</button>
+                </div>
+            </div>
+
+            <!-- Modal Ajustado -->
+            <div class="modal fade" id="myModal{{ envio.id }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Deseja realmente alterar o Status?</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="{% url 'editar_envios' envio.id %}" class="post-form"
+                                enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div>Nota: {{ envio.nota_num }}</div>
+                                <div>Pedido: {{ envio.pedido_compras }}</div>
+                                <div>Fornecedor: {{ envio.usuario.nome_fornecedor }}</div>
+                                <div class="modal-footer"></div>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <a href="{% url 'envio_ajustado_compras' envio.id %}" id="confirmacaoLink"
+                                    class="btn btn-primary">Sim</a>
+                            </form>
                         </div>
                     </div>
                 </div>
-        </tbody>
+            </div>
+
             {% endfor %}
-        </table>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -88,7 +84,7 @@
         $(document).ready(function () {
             $("#filtro").on("keyup", function () {
                 var valor = $(this).val().toLowerCase();
-                $("table tbody tr").filter(function () {
+                $(".card-deck .card").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(valor) > -1);
                 });
             });
@@ -96,4 +92,5 @@
     </script>
     {% endblock %}
 </body>
+
 </html>

@@ -12,5 +12,6 @@ class UserRegistrationForm(UserCreationForm):
 class EnviosNFsForm(forms.ModelForm):
     class Meta:
         model=EnviosNFs
-        fields=('pedido_compras','nota_num','pdf_nota','empresa_destinataria','solicitante', 'observacao_fornecedor')        
+        fields=('pedido_compras','nota_num','pdf_nota','empresa_destinataria','solicitante', 'observacao_fornecedor')
+   
         
