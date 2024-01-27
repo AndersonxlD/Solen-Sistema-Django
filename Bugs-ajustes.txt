@@ -1,4 +1,0 @@
-ajuste da data mysql
-validação da nota e fornecedor no preenchimento do novo envio
-nome de usuario proximo ao login
-status ajustado n funcionando
